@@ -2,23 +2,12 @@ import React, { useEffect, useState, useReducer } from "react";
 import axios from "axios";
 import InputField from "./UI/InputField";
 
-const INPUT_CHANGE = "INPUT_CHANGE";
-
-const inputReducer = (state, action) => {
-  switch (action.type) {
-    case INPUT_CHANGE:
-      return {
-        ...state,
-        value: action.value,
-      };
-    default:
-      return state;
-  }
-};
-
 const Form = (props) => {
   const [formData, setFormData] = useState();
   const [step, setStep] = useState(0);
+
+  const [userData, setUserData] = useState({});
+
   const loadFormData = async () => {
     const res = await axios.get(
       "https://ttv-videos.s3.ap-south-1.amazonaws.com/questions.json"
@@ -41,6 +30,17 @@ const Form = (props) => {
     });
   };
 
+  const valueChangeHandler = (step, questionIndex, value) => {
+    setUserData((prevState) => {
+      const newState = { ...prevState };
+      const prevStepValue = newState[step];
+      const newStepValue = !!prevStepValue ? prevStepValue : {};
+      newStepValue[questionIndex] = value;
+      newState[step] = newStepValue;
+      setUserData(newState);
+    });
+  };
+
   const stepData = !!formData ? formData[step] : [];
 
   return (
@@ -56,6 +56,14 @@ const Form = (props) => {
                     label={question}
                     type={type}
                     options={!!options ? options : []}
+                    onValueChange={(value) =>
+                      valueChangeHandler(step, index, value)
+                    }
+                    initalValue={
+                      !!userData && !!userData[step] && !!userData[step][index]
+                        ? userData[step][index]
+                        : ""
+                    }
                   />
                 </div>
               ))}

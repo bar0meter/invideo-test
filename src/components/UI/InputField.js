@@ -1,11 +1,12 @@
-import React, { isValidElement, useState } from "react";
+import React, { useState } from "react";
 
 const InputField = (props) => {
-  const { type, label, options } = props;
-  const [value, setValue] = useState("");
+  const { type, label, options, initialValue, onValueChange } = props;
+  const [value, setValue] = useState(initialValue);
 
   const inputChangeHandler = (val) => {
     setValue(val);
+    onValueChange(val);
   };
 
   return (
