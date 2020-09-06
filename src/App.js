@@ -1,24 +1,27 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from "react";
+import "./App.css";
+import Modal from "./components/UI/Modal";
+import Form from "./components/Form";
 
 function App() {
+  const [displayModal, setDisplay] = useState(false);
+
+  const toggleModalHandler = () => {
+    setDisplay((prev) => {
+      return !prev;
+    });
+  };
+
+  const doneHandler = (output) => {
+    console.log(output);
+  };
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <Modal display={displayModal}>
+        <Form onDone={doneHandler} />
+      </Modal>
+      <button onClick={toggleModalHandler}>Start</button>
     </div>
   );
 }
